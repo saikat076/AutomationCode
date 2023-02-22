@@ -5,8 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 
-driver_path = ChromeDriverManager().install()
-driver = webdriver.Chrome(driver_path)
+#driver_path = ChromeDriverManager().install()
+saikat_chrome_driver_path = 'PythonAuto/test/chromedriver_mac/chromedriver'
+suvranil_chrome_driver_path = 'PythonAuto/test/chromedriver_win/chromedriver.exe'
+driver = webdriver.Chrome(executable_path=saikat_chrome_driver_path)
+#driver = webdriver.Chrome(driver_path)
 
 wait = WebDriverWait(driver, 60)
 
