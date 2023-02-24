@@ -20,7 +20,8 @@ try:
     I_open_the_browser("https://stage.web.khulke.com/roundtable/all")
     I_log_in_with_email('saikatbhattacharyya631@gmail.com', 'Saikat123@')
     I_validate_login_functionality()
-except:
+except Exception as e:
+    print(e)
     print('Sign in failed')
     
 close_browser()

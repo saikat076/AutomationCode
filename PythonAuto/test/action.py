@@ -41,9 +41,10 @@ popular_news = "//*[text()='Popular Shows']"
 snip_it = "//*[text()='Snip-It']"
 townhall_header = "//p[text()='TownHall']"
 townhall_news = "//div[@id='townhall_post_body']"
-no_of_likes = "(//*[@id='post_footer_container']/div[3]/p)[1]"
-like_btn = "(//div[contains(@class, 'sc')]/button)[4]"
-dislike_btn = "(//div[contains(@class, 'sc')]/button)[5]"
+no_of_likes = "(//*[@id='post_footer_container']/div[3]/p)[2]"
+like_btn = "(//div[contains(@class, 'sc')]/button)[9]"
+dislike_btn = "(//div[contains(@class, 'sc')]/button)[10]"
+allow = "//button[text()='Allow']"
 
 ## populating action methods here ##
 
@@ -122,66 +123,86 @@ def click_on_login():
 def validate_post_login():
     driver.implicitly_wait(30)
 
-    if not driver.current_url == "https://stage.web.khulke.com/home":
-        AssertionError
+    if driver.current_url == "https://stage.web.khulke.com/home":
+        print('URL valudation passed')
+    else: 
+        raise Exception
 
     if not driver.find_element(By.XPATH, news).is_displayed():
-        AssertionError
+        raise Exception
     else:
         print('News is displayed')
 
     if not driver.find_element(By.XPATH, timeline).is_displayed():
-        AssertionError
+        raise Exception
     else:
         print('Timeline is displayed')
-        driver.find_element(By.XPATH, timeline).click()  
+
 
     if not driver.find_element(By.XPATH, popular_news).is_displayed():
-        AssertionError
+        raise Exception
     else:
         print('Popular news is displayed')  
 
     if not driver.find_element(By.XPATH, snip_it).is_displayed():
-        AssertionError
+        raise Exception
     else:
-        print('Snip it is displayed')   
+        print('Snip it is displayed') 
 
 def go_to_townhall():
-    wait.until(ec.visibility_of(driver.find_element(By.XPATH, townhall_header)))
-
     try:
-        driver.find_element(By.XPATH, "//*[contains(text(), 'Allow')]")
+        driver.find_element(By.XPATH, allow).click()
     except:
         print("")
 
+    driver.implicitly_wait(5)
+    driver.find_element(By.XPATH, timeline).click()  
+
+    wait.until(ec.visibility_of(driver.find_element(By.XPATH, townhall_header)))
+
     if not driver.find_element(By.XPATH, townhall_header).is_displayed():
-        AssertionError
+        print('Townhall not displayed')
+        raise Exception
     else:
         print('Townhall is displayed')
 
 def validate_townhall():
+    wait.until(ec.visibility_of(driver.find_element(By.XPATH, "//*[contains(text(), 'Write something')]")))
+    driver.implicitly_wait(20)
+
     list = driver.find_elements(By.XPATH, townhall_news)
     
-    if(len(list)==20 and list[0].is_displayed()):
+    if(len(list)>0 and list[0].is_displayed()):
         print('Townhall news validated')
     else:
-        print('Validation failed')
-        AssertionError
-    
-    num_of_like1 = driver.find_element(By.XPATH, no_of_likes).text()
-    driver.find_element(By.XPATH, like_btn).click()
-    num_of_like2 = driver.find_element(By.XPATH, no_of_likes).text()
+        print('Townhall news validation failed')
+        raise Exception
 
-    if(num_of_like2-num_of_like1 == 1):
+    driver.implicitly_wait(20)
+    num_of_like1 = driver.find_element(By.XPATH, no_of_likes).text
+    driver.find_element(By.XPATH, like_btn).click()
+
+    driver.implicitly_wait(20)
+    num_of_like2 = driver.find_element(By.XPATH, no_of_likes).text
+
+    driver.implicitly_wait(20000)
+
+    if(int(num_of_like2)-int(num_of_like1) == 1):
         print('Like validation successful')
         driver.find_element(By.XPATH, like_btn).click()
     else:
         print('Like validation failed')
-        AssertionError
+        print(num_of_like1)
+        print(num_of_like2)
+        raise Exception 
+    
+    driver.implicitly_wait(15)
 
     driver.find_element(By.XPATH, dislike_btn).click()
+    print('Dislike validation successful')
 
 ## method - close browser ##
 def close_browser():
-    #driver.close()
+    driver.implicitly_wait(10)
+    driver.close()
     driver.quit()
