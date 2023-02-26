@@ -16,15 +16,26 @@ def I_log_in_with_email(email, password):
 def I_validate_login_functionality():
     validate_post_login()
 
-@Then("I validate snip it")
-def I_validate_snip_it():
-    validate_snip_it()  
+@Then('I click on roundtable')
+def I_click_on_round_table():
+    click_on_round_table()
+
+@When('I click on mine')
+def I_click_on_mine():
+    click_on_mine()
+
+@Then('I validate mine')
+def I_validate_mine():
+    validate_mine()
 
 try:
     I_open_the_browser("https://stage.web.khulke.com/roundtable/all")
     I_log_in_with_email('saikatbhattacharyya631@gmail.com', 'Saikat123@')
     I_validate_login_functionality()
-    I_validate_snip_it()
+    I_click_on_round_table()
+    I_click_on_mine()
+    I_validate_mine()
+    
 except Exception as e:
     print(e)
     print('Validation failed')
