@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 import time
+import json
 
 driver_path = ChromeDriverManager().install()
 #saikat_chrome_driver_path = 'PythonAuto/test/chromedriver_mac/chromedriver'
@@ -57,6 +58,81 @@ uncirculate = "//*[text()='Uncirculate']"
 first_post = "(//p[contains(@class, 'sc-gswNZR')]/div/a)[1]"
 following_button = "//button[@class='following-button-small']"
 mute_button = "//button[@class='mute-btn']/i/svg[@class='MuiSvgIcon-root']"
+snip_it_like = "(//img[@alt='like'])[1]"
+snip_it_dislike = "(//img[@alt='dislike'])[1]"
+snip_it_comment = "(//img[@alt='comment'])[1]"
+snip_it_share = "(//img[@alt='share'])[1]"
+snip_it_add = "//button[contains(@class, 'addBtn')]"
+snip_it_post_comment = "//textarea[@placeholder='Write something...']"
+snip_it_post = "//button[text()='Post']"
+snip_it_video = "//div[@class='d-flex']"
+roundtable = "//a[text()='RoundTable']"
+all = "//button[text()='All']"
+video1 = "(//div[@id='rt_img'])[1]"
+recorded = "//h5[text()='recorded']"
+viewers_count = "//p[@class='viewers_count']"
+details_header = "//p[text()='RoundTable Details']"
+live = "//button[text()='Live']"
+upcoming = "//button[text()='Upcoming']"
+cover_img = "//div[@class='rt_img_div']"
+mine = "//button[text()='Mine']"
+new_RT = "//div[@class='newStep']"
+RT_video = "(//button[@class='torbtn'])[1]"
+RT_audio = "(//button[@class='torbtn'])[2]"
+recorded_audio_video = "(//button[@class='torbtn'])[3]"
+add_video_title = "//*[@placeholder='Add Title']"
+add_video_description = "//textarea[@placeholder='Add Description']"
+RT_continue = "//div/button[text()='CONTINUE']"
+RT_moderator = "(//div[@class=' css-hlgwow'])[1]/div[2]/*"
+RT_moderator_option = "(//img[@class='avatar'])[8]"
+panelist_option = "(//img[@class='avatar'])[8]"
+moderator_intro = "(//*[@placeholder='Introduction'])[1]"
+panelist_intro = "(//*[@placeholder='Introduction'])[2]"
+panelist = "(//div[@class=' css-hlgwow'])[2]/div[2]/*"
+add_panelist_btn = "//button[contains(@class, 'addpanelistbtn')]"
+upload_image = "(//*[text()='Upload Image'])[2]"
+upload_logo = "(//*[text()='Upload Logo'])"
+upload_intro = "(//*[text()='Upload Intro Video'])[2]"
+upload_outro = "(//*[text()='Upload Outro Video'])[2]"
+upload_doc = "(//*[text()='Upload Document'])[1]"
+categories = "(//*[@placeholder='Search and add'])[1]"
+tags = "(//*[@placeholder='Search and add'])[2]"
+categories_add = "(//button[text()='Add'])[1]"
+tags_add = "(//button[text()='Add'])[2]"
+recorded_audio_panelist = "(//div[@class='form-control-div '])[2]/*"
+upload_recorded_roundtable = "(//*[text()='Upload Recorded RoundTable'])[1]"
+search_a_user = "//div[@class=' css-19bb58m']/*"
+email = "//*[@placeholder='Add Mobile or Email ID to invite']"
+add_btn = "//button[text()='Add']"
+proceed_btn = "//button[text()='PROCEED']"
+my_rt = "//div[@class='d-flex']"
+edit_rt = "(//*[text()='Edit'])[1]"
+notification = "//button[@class='MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1yxmbwk']"
+accept_btn = "//button[text()='Accept']"
+reject_btn = "//button[text()='Reject']"
+notifications = "//*[text()='Notifications']"
+network = "//*[text()='Network']"
+first_noti = "//div[@class='user_suggestion_container']/div/div/div/div[2]/p"
+profile = "//*[text()='Profile']"
+snip_it_option = "//div[@class='MuiTabs-scroller MuiTabs-fixed css-1anid1y']/div/button[3]"
+snip_it_img = "//div[@class='snipsDiv']/img"
+menu = "(//button[@id='basic-button'])[1]"
+save_btn = "//*[text()='Save']"
+saved_option = "//div[@class='MuiTabs-scroller MuiTabs-fixed css-1anid1y']/div/button[4]"
+unsave_btn = "//*[text()='Unsave']"
+edit_profile = "//*[text()='Edit Profile']"
+bio = "//div[@class='bioCount']/textarea"
+full_name = "//*[@placeholder='Enter Full Name']"
+dob = "//*[@placeholder='dd/mm/yyyy']"
+gender = "//*[text()='Select...']"
+location  = "//*[@placeholder='Enter Your Location']"
+interest = "//*[@placeholder='Search and add']"
+save_changes = "(//*[text()='SAVE CHANGES'])[1]"
+save_changes_msg = "//*[text()='Your changes have been saved!']"
+search = "//*[@placeholder='Search']"
+search_options = "//div[@class='MuiTabs-flexContainer css-k008qs']/button"
+following = "//*[@id='root']/div[1]/div[2]/section/div[1]/div[1]/div/div[1]/div/p"
+follower = "//*[@id='root']/div[1]/div[2]/section/div[1]/div[1]/div/div[2]/div/p"
 
 ## populating action methods here ##
 
@@ -279,11 +355,470 @@ def validate_snip_it():
         print('Snip its are not available')
         raise Exception
 
-    hover = ActionChains(driver).move_to_element(driver.find_element(By.XPATH, mute_button))
-    hover.perform()
+    #hover = ActionChains(driver).move_to_element(driver.find_element(By.XPATH, mute_button))
+    #hover.perform()
 
-    driver.find_element(By.XPATH, mute_button).click()
-    print('Mute button clicked')
+    #driver.find_element(By.XPATH, mute_button).click()
+    #print('Mute button clicked')
+
+    time.sleep(5)
+
+    if(driver.find_element(By.XPATH, snip_it_like).is_displayed() and driver.find_element(By.XPATH, snip_it_dislike).is_displayed() and driver.find_element(By.XPATH, snip_it_comment).is_displayed() and driver.find_element(By.XPATH, snip_it_share).is_displayed()):
+        print('Snip it like, dislike, comment and share displayed')
+    else:
+        print('Snip it like, dislike, comment, share is not displayed')
+        raise Exception
+
+def click_on_add_and_validate():
+    driver.find_element(By.XPATH, snip_it_add).click()
+    time.sleep(2)
+    driver.find_element(By.XPATH, snip_it_post_comment).send_keys('Test Post')
+    if(driver.find_element(By.XPATH, snip_it_video).is_displayed()):
+        print('Post validated!')
+        driver.find_element(By.XPATH, snip_it_post).click()
+    else:
+        print('Post validation failed!')
+
+def click_on_round_table():
+    driver.find_element(By.XPATH, roundtable).click()
+
+def click_on_all():
+    driver.find_element(By.XPATH, all).click()
+
+def validate_RT():
+    driver.find_element(By.XPATH, video1).click()
+    time.sleep(3)
+    
+    if(driver.find_element(By.XPATH, recorded).is_displayed()):
+        print('RT validation passed')
+    else:
+        print('RT validation failed')
+        raise Exception
+    
+    driver.back()
+    driver.find_element(By.XPATH, viewers_count).click()
+
+    if(driver.find_element(By.XPATH, details_header).is_displayed()):
+        print('RT details displayed')
+    else:
+        print('RT details validation failed')
+        raise Exception
+
+def click_on_live():
+    driver.find_element(By.XPATH, live).click()
+
+def validate_live():
+    if(driver.current_url == 'https://stage.web.khulke.com/roundtable/live'):
+        print('Live page reirection validated')
+    else:
+        print('Live page redirection validation failed')
+        raise Exception
+
+def click_on_upcoming():
+    driver.find_element(By.XPATH, upcoming).click()
+
+def validate_upcoming():
+    if(driver.current_url == "https://stage.web.khulke.com/roundtable/upcoming"):
+        print('Upcoming URL validated')
+    else:
+        print('Upcoming URL validation failed')
+        raise Exception
+
+    time.sleep(2)
+    driver.find_element(By.XPATH, cover_img).click()
+    time.sleep(2)
+
+    try:
+        driver.find_element(By.XPATH, "//*[contains(text(), 'YES')]").click()
+    except:
+        print("")
+
+    time.sleep(2)
+
+    driver.find_element(By.XPATH, viewers_count).click()
+    time.sleep(1)
+    if(driver.find_element(By.XPATH, details_header).is_displayed()):
+        print('Upcoming roundtable validated')
+    else:
+        print('Upcoming roundtable validation failed')
+        raise Exception
+
+def click_on_mine():
+    driver.find_element(By.XPATH, mine).click()
+
+def validate_mine():
+    if(driver.current_url == 'https://stage.web.khulke.com/roundtable/mine'):
+        print('Mine URL validated')
+    else:
+        print('Mine URL validation failed')
+        raise Exception
+
+def click_on_new():
+    driver.find_element(By.XPATH, new_RT).click()
+
+def click_and_validate_RT_videos():
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, RT_video).click()
+    except:
+        print('')
+    driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
+    driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
+    
+    time.sleep(5)
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    time.sleep(5)
+
+    print('Added video details')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_moderator).click()
+    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    time.sleep(5)
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, panelist).click()
+    driver.find_element(By.XPATH, panelist).send_keys('testkhulke103')
+    time.sleep(5)
+    driver.find_element(By.XPATH, panelist_option).click()
+
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+    except:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    time.sleep(3)
+
+    status = True
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_intro).is_displayed() and driver.find_element(By.XPATH, upload_outro).is_displayed()):
+        status = True
+    else:
+        status = False
+
+    elements = driver.find_elements(By.XPATH, upload_logo)
+    for i in elements:
+        if(not i.is_displayed()):
+            status = False;
+
+    if(not status):
+        print('RT video - Validation failed!')
+   
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    driver.find_element(By.XPATH, search_a_user).click()
+    driver.find_element(By.XPATH, search_a_user).send_keys('iostester147')
+
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    driver.find_element(By.XPATH, email).send_keys('bbijoy854@gmail.com')
+    driver.find_element(By.XPATH, add_btn).click()
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    if(driver.find_element(By.XPATH, proceed_btn)):
+        print('RT video validation successful')
+    else:
+        print('RT video validation failed')
+        raise Exception
+
+def click_and_validate_RT_audio():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_audio).click()
+    driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
+    driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
+    
+    time.sleep(5)
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    time.sleep(5)
+
+    print('Added video details')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_moderator).click()
+    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    time.sleep(5)
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, panelist).click()
+    driver.find_element(By.XPATH, panelist).send_keys('testkhulke103')
+    time.sleep(5)
+    driver.find_element(By.XPATH, panelist_option).click()
+
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+    except:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    time.sleep(3)
+
+    status = True
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_intro).is_displayed() and driver.find_element(By.XPATH, upload_outro).is_displayed()):
+        status = True
+    else:
+        status = False
+
+    elements = driver.find_elements(By.XPATH, upload_logo)
+    for i in elements:
+        if(not i.is_displayed()):
+            status = False;
+
+    if(not status):
+        print('RT audio validation failed!')
+        raise Exception
+    
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    driver.find_element(By.XPATH, search_a_user).click()
+    driver.find_element(By.XPATH, search_a_user).send_keys('iostester147')
+
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    driver.find_element(By.XPATH, email).send_keys('bbijoy854@gmail.com')
+    driver.find_element(By.XPATH, add_btn).click()
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    if(driver.find_element(By.XPATH, proceed_btn)):
+        print('RT audio validation successful')
+    else:
+        print('RT audio validation failed')
+        raise Exception
+
+def click_and_validate_recorded_audio():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, recorded_audio_video).click()
+    driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
+    driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_moderator).click()
+    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    time.sleep(5)
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+    except:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+
+    driver.find_element(By.XPATH, recorded_audio_panelist).send_keys('testkhulke103')
+    time.sleep(5)
+    #driver.find_element(By.XPATH, panelist_option).click()
+
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_recorded_roundtable).is_displayed()):
+        print('Recorded audio validation successfull')
+    else:
+        print('Recorded Audio validation failed')
+        raise Exception
+
+    time.sleep(5)
+
+def click_and_validate_recorded_video():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, recorded_audio_video).click()
+    driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
+    driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_moderator).click()
+    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    time.sleep(5)
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+    except:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+
+    driver.find_element(By.XPATH, recorded_audio_panelist).send_keys('testkhulke103')
+    time.sleep(5)
+    #driver.find_element(By.XPATH, panelist_option).click()
+
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_recorded_roundtable).is_displayed()):
+        print('Recorded video validation successfull')
+    else:
+        print('Recorded video validation failed')
+        raise Exception
+
+    time.sleep(5)
+
+def edit_upcoming_RT():
+    driver.refresh()
+    time.sleep(5)
+    driver.find_element(By.XPATH, my_rt).click()
+    time.sleep(5)
+    driver.find_element(By.XPATH, edit_rt).click()
+
+def check_noti_and_validate():
+    driver.find_element(By.XPATH, notification).click()
+    
+    if(driver.find_element(By.XPATH, accept_btn).is_displayed() and driver.find_element(By.XPATH, reject_btn).is_displayed):
+        print('Validation successful for round table invitations')
+    else:
+        print('Validation failed for roundtable invitaion')
+        raise Exception
+
+def go_to_network_and_validate():
+    driver.find_element(By.XPATH, notifications).click()
+    driver.find_element(By.XPATH, network).click()
+
+    if((driver.find_element(By.XPATH, first_noti).is_displayed()) and ("started following you" in  driver.find_element(By.XPATH, first_noti).text)):
+        print('Follow notification validation successful')
+    else:
+        print('Follow notification validation failed')
+        raise Exception
+
+def go_to_profile_RT_and_validate():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, profile).click()
+    driver.find_element(By.XPATH, snip_it_option).click()
+    if(driver.find_element(By.XPATH, snip_it_img).is_displayed()):
+        print('Snip it displayed under round table in profile - validated')
+    else:
+        print('Snip it displayed under round table in profile - validation failed')
+
+def save_post_in_timeline():
+    time.sleep(2)
+
+    driver.find_element(By.XPATH, menu).click()
+    driver.find_element(By.XPATH, save_btn).click()
+
+def go_to_profile_and_validate_saved_post():
+    driver.find_element(By.XPATH, profile).click()
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, saved_option).click()
+    driver.find_element(By.XPATH, menu).click()
+
+    if(driver.find_element(By.XPATH, unsave_btn).is_displayed()):
+        print('Save functionality validated')
+        driver.find_element(By.XPATH, unsave_btn).click()
+        time.sleep(3)
+    else:
+        print('Save functionality validation failed')
+        raise Exception
+
+def go_to_profile_and_edit():
+    driver.find_element(By.XPATH, profile).click()
+    time.sleep(5)
+    driver.find_element(By.XPATH, edit_profile).click()
+    time.sleep(10)
+
+    driver.find_element(By.XPATH, save_changes).click()
+
+    time.sleep(3)
+
+    if(driver.find_element(By.XPATH, bio).is_displayed() and driver.find_element(By.XPATH, full_name).is_displayed() and driver.find_element(By.XPATH, dob).is_displayed() and driver.find_element(By.XPATH, gender).is_displayed() and driver.find_element(By.XPATH, location).is_displayed() and driver.find_element(By.XPATH, interest).is_displayed() and driver.find_element(By.XPATH, save_changes_msg).is_displayed()):
+        print('Edit profile validated successfully')
+    else:
+        print('Edit profile validation failed')
+        raise Exception
+
+    #driver.find_element(By.XPATH, save_changes).click()
+
+def go_to_search_and_validate():
+    driver.find_element(By.XPATH, search).send_keys('Test')
+    driver.find_element(By.XPATH, search).send_keys(Keys.ENTER)
+
+    elements = driver.find_elements(By.XPATH, search_options)
+
+    for i in elements:
+        if(not i.is_displayed()):
+            raise Exception
+    
+    print('Search validation succesful')
+
+def go_to_profile_and_validate():
+    driver.find_element(By.XPATH, profile).click()
+
+    time.sleep(5)
+
+    if(driver.find_element(By.XPATH, following).is_displayed() and driver.find_element(By.XPATH, follower).is_displayed()):
+        print('Number of following and followers are displayed')
+    else:
+        print('Number of following and followers not displayed')
+        raise Exception
+
+    driver.find_element(By.XPATH, following).click()
+    time.sleep(2)
+
+    driver.find_element(By.XPATH, "(//*[text()='Followers'])[2]").click()
+    time.sleep(2)
 
 ## method - close browser ##
 def close_browser():
