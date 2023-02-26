@@ -16,17 +16,31 @@ def I_log_in_with_email(email, password):
 def I_validate_login_functionality():
     validate_post_login()
 
-@Then("I go to profile RT and validate snip it")
-def I_go_to_profile_RT_and_validate_snip_it():
-    go_to_profile_RT_and_validate()
+@When("I go to townhall news")
+def I_go_to_townhall_news():
+    go_to_townhall()
+
+@Then("I validate townhall news")
+def I_validate_townhall_news():
+    validate_townhall()
+
+@When("I save a post from timeline")
+def I_save_a_post_from_timeline():
+    save_post_in_timeline()
+
+@Then("I go to profile and validate saved post")
+def I_go_to_profile_and_validate_saved_post():
+    go_to_profile_and_validate_saved_post()
 
 try:
     I_open_the_browser("https://stage.web.khulke.com/roundtable/all")
     I_log_in_with_email('saikatbhattacharyya631@gmail.com', 'Saikat123@')
     I_validate_login_functionality()
-    I_go_to_profile_RT_and_validate_snip_it()
+    I_go_to_townhall_news()
+    I_validate_townhall_news()
+    I_save_a_post_from_timeline()
+    I_go_to_profile_and_validate_saved_post()
 except Exception as e:
     print(e)
-    print('Validation failed')
 
 close_browser()

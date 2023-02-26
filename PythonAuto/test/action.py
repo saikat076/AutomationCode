@@ -113,6 +113,26 @@ reject_btn = "//button[text()='Reject']"
 notifications = "//*[text()='Notifications']"
 network = "//*[text()='Network']"
 first_noti = "//div[@class='user_suggestion_container']/div/div/div/div[2]/p"
+profile = "//*[text()='Profile']"
+snip_it_option = "//div[@class='MuiTabs-scroller MuiTabs-fixed css-1anid1y']/div/button[3]"
+snip_it_img = "//div[@class='snipsDiv']/img"
+menu = "(//button[@id='basic-button'])[1]"
+save_btn = "//*[text()='Save']"
+saved_option = "//div[@class='MuiTabs-scroller MuiTabs-fixed css-1anid1y']/div/button[4]"
+unsave_btn = "//*[text()='Unsave']"
+edit_profile = "//*[text()='Edit Profile']"
+bio = "//div[@class='bioCount']/textarea"
+full_name = "//*[@placeholder='Enter Full Name']"
+dob = "//*[@placeholder='dd/mm/yyyy']"
+gender = "//*[text()='Select...']"
+location  = "//*[@placeholder='Enter Your Location']"
+interest = "//*[@placeholder='Search and add']"
+save_changes = "(//*[text()='SAVE CHANGES'])[1]"
+save_changes_msg = "//*[text()='Your changes have been saved!']"
+search = "//*[@placeholder='Search']"
+search_options = "//div[@class='MuiTabs-flexContainer css-k008qs']/button"
+following = "//*[@id='root']/div[1]/div[2]/section/div[1]/div[1]/div/div[1]/div/p"
+follower = "//*[@id='root']/div[1]/div[2]/section/div[1]/div[1]/div/div[2]/div/p"
 
 ## populating action methods here ##
 
@@ -722,6 +742,83 @@ def go_to_network_and_validate():
         print('Follow notification validation failed')
         raise Exception
 
+def go_to_profile_RT_and_validate():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, profile).click()
+    driver.find_element(By.XPATH, snip_it_option).click()
+    if(driver.find_element(By.XPATH, snip_it_img).is_displayed()):
+        print('Snip it displayed under round table in profile - validated')
+    else:
+        print('Snip it displayed under round table in profile - validation failed')
+
+def save_post_in_timeline():
+    time.sleep(2)
+
+    driver.find_element(By.XPATH, menu).click()
+    driver.find_element(By.XPATH, save_btn).click()
+
+def go_to_profile_and_validate_saved_post():
+    driver.find_element(By.XPATH, profile).click()
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, saved_option).click()
+    driver.find_element(By.XPATH, menu).click()
+
+    if(driver.find_element(By.XPATH, unsave_btn).is_displayed()):
+        print('Save functionality validated')
+        driver.find_element(By.XPATH, unsave_btn).click()
+        time.sleep(3)
+    else:
+        print('Save functionality validation failed')
+        raise Exception
+
+def go_to_profile_and_edit():
+    driver.find_element(By.XPATH, profile).click()
+    time.sleep(5)
+    driver.find_element(By.XPATH, edit_profile).click()
+    time.sleep(10)
+
+    driver.find_element(By.XPATH, save_changes).click()
+
+    time.sleep(3)
+
+    if(driver.find_element(By.XPATH, bio).is_displayed() and driver.find_element(By.XPATH, full_name).is_displayed() and driver.find_element(By.XPATH, dob).is_displayed() and driver.find_element(By.XPATH, gender).is_displayed() and driver.find_element(By.XPATH, location).is_displayed() and driver.find_element(By.XPATH, interest).is_displayed() and driver.find_element(By.XPATH, save_changes_msg).is_displayed()):
+        print('Edit profile validated successfully')
+    else:
+        print('Edit profile validation failed')
+        raise Exception
+
+    #driver.find_element(By.XPATH, save_changes).click()
+
+def go_to_search_and_validate():
+    driver.find_element(By.XPATH, search).send_keys('Test')
+    driver.find_element(By.XPATH, search).send_keys(Keys.ENTER)
+
+    elements = driver.find_elements(By.XPATH, search_options)
+
+    for i in elements:
+        if(not i.is_displayed()):
+            raise Exception
+    
+    print('Search validation succesful')
+
+def go_to_profile_and_validate():
+    driver.find_element(By.XPATH, profile).click()
+
+    time.sleep(5)
+
+    if(driver.find_element(By.XPATH, following).is_displayed() and driver.find_element(By.XPATH, follower).is_displayed()):
+        print('Number of following and followers are displayed')
+    else:
+        print('Number of following and followers not displayed')
+        raise Exception
+
+    driver.find_element(By.XPATH, following).click()
+    time.sleep(2)
+
+    driver.find_element(By.XPATH, "(//*[text()='Followers'])[2]").click()
+    time.sleep(2)
 
 ## method - close browser ##
 def close_browser():
