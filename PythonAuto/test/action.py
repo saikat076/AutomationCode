@@ -5,6 +5,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.action_chains import ActionChains
+import time
 
 driver_path = ChromeDriverManager().install()
 #saikat_chrome_driver_path = 'PythonAuto/test/chromedriver_mac/chromedriver'
@@ -41,10 +43,20 @@ popular_news = "//*[text()='Popular Shows']"
 snip_it = "//*[text()='Snip-It']"
 townhall_header = "//p[text()='TownHall']"
 townhall_news = "//div[@id='townhall_post_body']"
-no_of_likes = "(//*[@id='post_footer_container']/div[3]/p)[2]"
-like_btn = "(//div[contains(@class, 'sc')]/button)[9]"
-dislike_btn = "(//div[contains(@class, 'sc')]/button)[10]"
+no_of_likes = "(//*[@id='post_footer_container']/div[3]/p)[1]"
+like_btn = "(//div[contains(@class, 'sc')]/button)[4]"
+dislike_btn = "(//div[contains(@class, 'sc')]/button)[5]"
 allow = "//button[text()='Allow']"
+comment = "(//div[contains(@class, 'sc')]/button)[7]"
+comment_box = "//textarea[contains(@placeholder, 'Write what you feel about this...')]"
+post_comment = "//*[text()='Post']"
+quote_or_circulate = "//*[@id='post_footer_container']/div[2]/button"
+quote = "//*[text()='Quote']"
+circulate = "//*[text()='Circulate']"
+uncirculate = "//*[text()='Uncirculate']"
+first_post = "(//p[contains(@class, 'sc-gswNZR')]/div/a)[1]"
+following_button = "//button[@class='following-button-small']"
+mute_button = "//button[@class='mute-btn']/i/svg[@class='MuiSvgIcon-root']"
 
 ## populating action methods here ##
 
@@ -123,6 +135,11 @@ def click_on_login():
 def validate_post_login():
     driver.implicitly_wait(30)
 
+    try:
+        driver.find_element(By.XPATH, allow).click()
+    except:
+        print("")
+
     if driver.current_url == "https://stage.web.khulke.com/home":
         print('URL valudation passed')
     else: 
@@ -150,10 +167,6 @@ def validate_post_login():
         print('Snip it is displayed') 
 
 def go_to_townhall():
-    try:
-        driver.find_element(By.XPATH, allow).click()
-    except:
-        print("")
 
     driver.implicitly_wait(5)
     driver.find_element(By.XPATH, timeline).click()  
@@ -178,28 +191,99 @@ def validate_townhall():
         print('Townhall news validation failed')
         raise Exception
 
-    driver.implicitly_wait(20)
-    num_of_like1 = driver.find_element(By.XPATH, no_of_likes).text
+def validate_likes():
+    num_of_likes1 = int(driver.find_element(By.XPATH, no_of_likes).text)
+    time.sleep(5)
     driver.find_element(By.XPATH, like_btn).click()
+    time.sleep(5)
+    num_of_likes2 = int(driver.find_element(By.XPATH, no_of_likes).text)
 
-    driver.implicitly_wait(20)
-    num_of_like2 = driver.find_element(By.XPATH, no_of_likes).text
-
-    driver.implicitly_wait(20000)
-
-    if(int(num_of_like2)-int(num_of_like1) == 1):
+    if(num_of_likes2-num_of_likes1 == 1):
         print('Like validation successful')
-        driver.find_element(By.XPATH, like_btn).click()
     else:
-        print('Like validation failed')
-        print(num_of_like1)
-        print(num_of_like2)
-        raise Exception 
+        print('Like validation failed', num_of_likes1, ' ', num_of_likes2)
+        raise Exception
     
-    driver.implicitly_wait(15)
+    driver.find_element(By.XPATH, like_btn).click()
+    time.sleep(5)
 
+def validate_dislike():
     driver.find_element(By.XPATH, dislike_btn).click()
-    print('Dislike validation successful')
+    time.sleep(2)
+    driver.find_element(By.XPATH, dislike_btn).click()
+    time.sleep(2)
+
+def validate_comment():
+    driver.find_element(By.XPATH, comment).click()
+    time.sleep(5)
+    driver.find_element(By.XPATH, comment_box).send_keys('Test comment')
+    driver.find_element(By.XPATH, post_comment).click()
+    time.sleep(5)
+
+def validate_circulate_and_quote():
+    driver.find_element(By.XPATH, quote_or_circulate).click()
+    time.sleep(2)
+    driver.find_element(By.XPATH, circulate).click()
+    time.sleep(2)
+    print('Circulate is validated')
+
+    driver.refresh()
+    time.sleep(5)
+    driver.find_element(By.XPATH, timeline).click() 
+
+    driver.find_element(By.XPATH, quote_or_circulate).click()
+    time.sleep(2)
+    driver.find_element(By.XPATH, uncirculate).click()
+    time.sleep(2)
+    print('Uncirculate is Validated')
+
+    driver.find_element(By.XPATH, quote_or_circulate).click()
+    time.sleep(2)
+    driver.find_element(By.XPATH, quote).click()
+    time.sleep(2)
+    print('Quote is validate')
+
+def validate_timeline_post():
+    driver.find_element(By.XPATH, first_post).click()
+    time.sleep(10)
+    if(driver.find_element(By.XPATH, following_button).is_displayed() and driver.find_element(By.XPATH, following_button).text == 'Following'):
+        print('Timeline is showing post from the persons I follow')
+    else:
+        print('Validation of timeline post - failed')
+        raise Exception
+
+    driver.back()
+    time.sleep(5)
+    driver.find_element(By.XPATH, timeline).click()
+
+    if(driver.find_element(By.XPATH, like_btn).is_displayed and driver.find_element(By.XPATH, dislike_btn).is_displayed() and driver.find_element(By.XPATH, comment).is_displayed() and driver.find_element(By.XPATH, quote_or_circulate).is_displayed()):
+        print('like, dislike, comment, circulate or quote is validated')
+    else:
+        print('Validation failed for like, dislike, comment, circulate or quote')
+        raise Exception
+
+def validate_snip_it():
+
+    driver.find_element(By.XPATH, snip_it).click()
+
+    if(driver.current_url == 'https://stage.web.khulke.com/snip-it'):
+        print('Redirected to snip it - ', driver.current_url)
+    else:
+        print('Not redirected to snip it')
+        raise Exception
+
+    videos = driver.find_elements(By.XPATH, '//video')
+    if(len(videos) > 1):
+        print('All snip-its available')
+    else:
+        print('Snip its are not available')
+        raise Exception
+
+    hover = ActionChains(driver).move_to_element(driver.find_element(By.XPATH, mute_button))
+    hover.perform()
+
+    driver.find_element(By.XPATH, mute_button).click()
+    print('Mute button clicked')
 
 ## method - close browser ##
 def close_browser():

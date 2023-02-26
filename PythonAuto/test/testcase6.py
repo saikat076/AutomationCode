@@ -16,20 +16,15 @@ def I_log_in_with_email(email, password):
 def I_validate_login_functionality():
     validate_post_login()
 
-@When("I go to townhall news")
-def I_go_to_townhall_news():
-    go_to_townhall()
-
-@Then("I validate townhall news")
-def I_validate_townhall_news():
-    validate_townhall()
+@Then("I validate snip it")
+def I_validate_snip_it():
+    validate_snip_it()  
 
 try:
     I_open_the_browser("https://stage.web.khulke.com/roundtable/all")
     I_log_in_with_email('saikatbhattacharyya631@gmail.com', 'Saikat123@')
     I_validate_login_functionality()
-    I_go_to_townhall_news()
-    I_validate_townhall_news()
+    I_validate_snip_it()
 except Exception as e:
     print(e)
 
