@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 import time
+import json
 
 driver_path = ChromeDriverManager().install()
 #saikat_chrome_driver_path = 'PythonAuto/test/chromedriver_mac/chromedriver'
@@ -83,10 +84,11 @@ add_video_title = "//*[@placeholder='Add Title']"
 add_video_description = "//textarea[@placeholder='Add Description']"
 RT_continue = "//div/button[text()='CONTINUE']"
 RT_moderator = "(//div[@class=' css-hlgwow'])[1]/div[2]/*"
-RT_moderator_option = "//div[@id='react-select-2-listbox']/*"
+RT_moderator_option = "(//img[@class='avatar'])[8]"
+panelist_option = "(//img[@class='avatar'])[8]"
 moderator_intro = "(//*[@placeholder='Introduction'])[1]"
 panelist_intro = "(//*[@placeholder='Introduction'])[2]"
-panelist = "(//*[text()='Search and add'])[2]"
+panelist = "(//div[@class=' css-hlgwow'])[2]/div[2]/*"
 add_panelist_btn = "//button[contains(@class, 'addpanelistbtn')]"
 upload_image = "(//*[text()='Upload Image'])[2]"
 upload_logo = "(//*[text()='Upload Logo'])"
@@ -97,7 +99,14 @@ categories = "(//*[@placeholder='Search and add'])[1]"
 tags = "(//*[@placeholder='Search and add'])[2]"
 categories_add = "(//button[text()='Add'])[1]"
 tags_add = "(//button[text()='Add'])[2]"
-
+recorded_audio_panelist = "(//div[@class='form-control-div '])[2]/*"
+upload_recorded_roundtable = "(//*[text()='Upload Recorded RoundTable'])[1]"
+search_a_user = "//div[@class=' css-19bb58m']/*"
+email = "//*[@placeholder='Add Mobile or Email ID to invite']"
+add_btn = "//button[text()='Add']"
+proceed_btn = "//button[text()='PROCEED']"
+my_rt = "//div[@class='d-flex']"
+edit_rt = "(//*[text()='Edit'])[1]"
 
 ## populating action methods here ##
 
@@ -425,7 +434,10 @@ def click_and_validate_RT_videos():
 
     time.sleep(5)
 
-    driver.find_element(By.XPATH, RT_video).click()
+    try:
+        driver.find_element(By.XPATH, RT_video).click()
+    except:
+        print('')
     driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
     driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
     
@@ -445,17 +457,245 @@ def click_and_validate_RT_videos():
     driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
     time.sleep(5)
     driver.find_element(By.XPATH, RT_moderator_option).click()
-    driver.find_element(By.XPATH, moderator_intro).send_keys('Test mderator introduction')
+    
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
 
     time.sleep(5)
 
+    driver.find_element(By.XPATH, panelist).click()
     driver.find_element(By.XPATH, panelist).send_keys('testkhulke103')
     time.sleep(5)
-    driver.find_element(By.XPATH, panelist).send_keys(Keys.ENTER)
-    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
-    driver.find_element(By.XPATH, add_panelist_btn).click()
-    driver.find_element(By.XPATH, RT_continue).click()
+    driver.find_element(By.XPATH, panelist_option).click()
 
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+    except:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    time.sleep(3)
+
+    status = True
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_intro).is_displayed() and driver.find_element(By.XPATH, upload_outro).is_displayed()):
+        status = True
+    else:
+        status = False
+
+    elements = driver.find_elements(By.XPATH, upload_logo)
+    for i in elements:
+        if(not i.is_displayed()):
+            status = False;
+
+    if(not status):
+        print('RT video - Validation failed!')
+   
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    driver.find_element(By.XPATH, search_a_user).click()
+    driver.find_element(By.XPATH, search_a_user).send_keys('iostester147')
+
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    driver.find_element(By.XPATH, email).send_keys('bbijoy854@gmail.com')
+    driver.find_element(By.XPATH, add_btn).click()
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    if(driver.find_element(By.XPATH, proceed_btn)):
+        print('RT video validation successful')
+    else:
+        print('RT video validation failed')
+        raise Exception
+
+def click_and_validate_RT_audio():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_audio).click()
+    driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
+    driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
+    
+    time.sleep(5)
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    time.sleep(5)
+
+    print('Added video details')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_moderator).click()
+    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    time.sleep(5)
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, panelist).click()
+    driver.find_element(By.XPATH, panelist).send_keys('testkhulke103')
+    time.sleep(5)
+    driver.find_element(By.XPATH, panelist_option).click()
+
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+    except:
+        driver.find_element(By.XPATH, add_panelist_btn).click()
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    time.sleep(3)
+
+    status = True
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_intro).is_displayed() and driver.find_element(By.XPATH, upload_outro).is_displayed()):
+        status = True
+    else:
+        status = False
+
+    elements = driver.find_elements(By.XPATH, upload_logo)
+    for i in elements:
+        if(not i.is_displayed()):
+            status = False;
+
+    if(not status):
+        print('RT audio validation failed!')
+        raise Exception
+    
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    driver.find_element(By.XPATH, search_a_user).click()
+    driver.find_element(By.XPATH, search_a_user).send_keys('iostester147')
+
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    driver.find_element(By.XPATH, email).send_keys('bbijoy854@gmail.com')
+    driver.find_element(By.XPATH, add_btn).click()
+
+    try:
+        driver.find_element(By.XPATH, RT_continue).click()
+    except:
+        driver.find_element(By.XPATH, RT_continue).click()
+
+    if(driver.find_element(By.XPATH, proceed_btn)):
+        print('RT audio validation successful')
+    else:
+        print('RT audio validation failed')
+        raise Exception
+
+def click_and_validate_recorded_audio():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, recorded_audio_video).click()
+    driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
+    driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_moderator).click()
+    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    time.sleep(5)
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+    except:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+
+    driver.find_element(By.XPATH, recorded_audio_panelist).send_keys('testkhulke103')
+    time.sleep(5)
+    #driver.find_element(By.XPATH, panelist_option).click()
+
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_recorded_roundtable).is_displayed()):
+        print('Recorded audio validation successfull')
+    else:
+        print('Recorded Audio validation failed')
+        raise Exception
+
+    time.sleep(5)
+
+def click_and_validate_recorded_video():
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, recorded_audio_video).click()
+    driver.find_element(By.XPATH, add_video_title).send_keys('Test title')
+    driver.find_element(By.XPATH, add_video_description).send_keys('Test Description')
+
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, RT_moderator).click()
+    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    time.sleep(5)
+    driver.find_element(By.XPATH, RT_moderator_option).click()
+    
+    
+    driver.find_element(By.XPATH, moderator_intro).send_keys('Test moderator introduction')
+
+    time.sleep(5)
+
+    try:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+    except:
+        driver.find_element(By.XPATH, recorded_audio_panelist).click()
+
+    driver.find_element(By.XPATH, recorded_audio_panelist).send_keys('testkhulke103')
+    time.sleep(5)
+    #driver.find_element(By.XPATH, panelist_option).click()
+
+    driver.find_element(By.XPATH, panelist_intro).send_keys('Test panelist introduction')
+
+    if(driver.find_element(By.XPATH, upload_image).is_displayed() and driver.find_element(By.XPATH, upload_recorded_roundtable).is_displayed()):
+        print('Recorded video validation successfull')
+    else:
+        print('Recorded video validation failed')
+        raise Exception
+
+    time.sleep(5)
+
+def edit_upcoming_RT():
+    driver.refresh()
+    time.sleep(5)
+    driver.find_element(By.XPATH, my_rt).click()
+    time.sleep(5)
+    driver.find_element(By.XPATH, edit_rt).click()
 
 ## method - close browser ##
 def close_browser():
