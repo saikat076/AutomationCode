@@ -107,6 +107,12 @@ add_btn = "//button[text()='Add']"
 proceed_btn = "//button[text()='PROCEED']"
 my_rt = "//div[@class='d-flex']"
 edit_rt = "(//*[text()='Edit'])[1]"
+notification = "//button[@class='MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1yxmbwk']"
+accept_btn = "//button[text()='Accept']"
+reject_btn = "//button[text()='Reject']"
+notifications = "//*[text()='Notifications']"
+network = "//*[text()='Network']"
+first_noti = "//div[@class='user_suggestion_container']/div/div/div/div[2]/p"
 
 ## populating action methods here ##
 
@@ -696,6 +702,26 @@ def edit_upcoming_RT():
     driver.find_element(By.XPATH, my_rt).click()
     time.sleep(5)
     driver.find_element(By.XPATH, edit_rt).click()
+
+def check_noti_and_validate():
+    driver.find_element(By.XPATH, notification).click()
+    
+    if(driver.find_element(By.XPATH, accept_btn).is_displayed() and driver.find_element(By.XPATH, reject_btn).is_displayed):
+        print('Validation successful for round table invitations')
+    else:
+        print('Validation failed for roundtable invitaion')
+        raise Exception
+
+def go_to_network_and_validate():
+    driver.find_element(By.XPATH, notifications).click()
+    driver.find_element(By.XPATH, network).click()
+
+    if((driver.find_element(By.XPATH, first_noti).is_displayed()) and ("started following you" in  driver.find_element(By.XPATH, first_noti).text)):
+        print('Follow notification validation successful')
+    else:
+        print('Follow notification validation failed')
+        raise Exception
+
 
 ## method - close browser ##
 def close_browser():
