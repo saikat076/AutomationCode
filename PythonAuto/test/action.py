@@ -248,6 +248,7 @@ def validate_post_login():
     else:
         print('Snip it is displayed') 
 
+## method 12 - going to townhall
 def go_to_townhall():
 
     driver.implicitly_wait(5)
@@ -261,6 +262,7 @@ def go_to_townhall():
     else:
         print('Townhall is displayed')
 
+## method 13 - validating townhall
 def validate_townhall():
     wait.until(ec.visibility_of(driver.find_element(By.XPATH, "//*[contains(text(), 'Write something')]")))
     driver.implicitly_wait(20)
@@ -273,6 +275,7 @@ def validate_townhall():
         print('Townhall news validation failed')
         raise Exception
 
+## method 14 - validating likes
 def validate_likes():
     num_of_likes1 = int(driver.find_element(By.XPATH, no_of_likes).text)
     time.sleep(5)
@@ -289,6 +292,7 @@ def validate_likes():
     driver.find_element(By.XPATH, like_btn).click()
     time.sleep(5)
 
+## method 15 - validating dislikes
 def validate_dislike():
     driver.find_element(By.XPATH, dislike_btn).click()
     time.sleep(2)
