@@ -133,6 +133,12 @@ search = "//*[@placeholder='Search']"
 search_options = "//div[@class='MuiTabs-flexContainer css-k008qs']/button"
 following = "//*[@id='root']/div[1]/div[2]/section/div[1]/div[1]/div/div[1]/div/p"
 follower = "//*[@id='root']/div[1]/div[2]/section/div[1]/div[1]/div/div[2]/div/p"
+popular_shows = "//*[text()='Popular Shows']"
+popular_RT = "//div[@class='rt_img_div']"
+popular_RT_text = "//div[@class='card_text']"
+townhall = "(//*[text()='TownHall'])[1]"
+timeline_ = "//*[text()='Timeline']"
+interaction = "//div[@id='townhall_post_container']/div/span[2]"
 
 ## populating action methods here ##
 
@@ -741,6 +747,16 @@ def go_to_network_and_validate():
     else:
         print('Follow notification validation failed')
         raise Exception
+    
+def go_to_network_and_validate_interactions():
+    driver.find_element(By.XPATH, notifications).click()
+    #driver.find_element(By.XPATH, network).click()
+
+    if((driver.find_element(By.XPATH, interaction).is_displayed()) and ("liked your post" in  driver.find_element(By.XPATH, interaction).text)):
+        print('Interaction notification validation successful')
+    else:
+        print('Interaction notification validation failed')
+        raise Exception
 
 def go_to_profile_RT_and_validate():
     time.sleep(5)
@@ -819,6 +835,62 @@ def go_to_profile_and_validate():
 
     driver.find_element(By.XPATH, "(//*[text()='Followers'])[2]").click()
     time.sleep(2)
+
+def validate_popular_shows():
+    time.sleep(3)
+
+    if(driver.find_element(By.XPATH, popular_shows).is_displayed()):
+        print('Popular shows displayed')
+    else:
+        print('Popular shows validation failed')
+        raise Exception
+
+def validate_popular_RT():
+    if(len(driver.find_elements(By.XPATH, popular_RT))>=10):
+        print('Popular RT validated')
+    else:
+        print('Popular RT validation failed')
+        raise Exception
+    
+    for i in driver.find_elements(By.XPATH, popular_RT_text):
+        if(not i.is_displayed()):
+            raise Exception
+        
+def validate_roundtable():
+    time.sleep(3)
+
+    if driver.find_element(By.XPATH, all).is_displayed() and driver.find_element(By.XPATH, upcoming).is_displayed() and driver.find_element(By.XPATH, live).is_displayed() and driver.find_element(By.XPATH, mine).is_displayed():
+        print('RT validated for anonymous user')
+    else:
+        print('RT validation failed for anonymous user')
+
+def validate_townhall_new():
+    time.sleep(5)
+    driver.find_element(By.XPATH, townhall).click()
+    time.sleep(5)
+
+    if(driver.find_element(By.XPATH, news).is_displayed() and driver.find_element(By.XPATH, timeline_).is_displayed()):
+        print('Timeline validation successful')
+    else:
+        print('Timeline validation failed')
+        raise Exception
+
+def validate_post_of_following():
+    if("cbetkvak" in driver.find_element(By.XPATH, "//p[@class='sc-gswNZR kHzHci']/div/a").text):
+        print('Post of following - validated')
+    else:
+        print('Post of following - validation failed')
+
+def go_to_profile_and_validate_RT():
+    driver.find_element(By.XPATH, "//p[@class='sc-gswNZR kHzHci']/div/a").click()
+    time.sleep(3)
+    driver.find_element(By.XPATH, "(//*[text()='RoundTable'])[2]").click()
+
+    if(driver.find_element(By.XPATH, "//div[@class='rt_img_div']").is_displayed()):
+        print('Roundtable validated')
+    else:
+        print('Roundtable validation failed')
+        raise Exception
 
 ## method - close browser ##
 def close_browser():
