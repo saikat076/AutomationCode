@@ -147,6 +147,9 @@ invite_msg = "//p[@class='MuiTypography-root MuiTypography-body1 css-1amsfhl']"
 yes_btn = "//button[text()='YES']"
 card = "//p[@class='rt_tags']"
 rt_details = "//*[text()='RoundTable Details']"
+share_btn = "(//*[@id='share_button'])[1]"
+post_it = "//*[text()='Post it']"
+login_popup = "//p[@class='MuiTypography-root MuiTypography-body1 css-70xrfa']"
 
 ## populating action methods here ##
 
@@ -921,6 +924,28 @@ def validate_townhall_new():
     else:
         print('Timeline validation failed')
         raise Exception
+    
+    driver.get("https://stage.web.khulke.com/roundtable/all")
+    time.sleep(5)
+
+    driver.find_element(By.XPATH, live).click()
+    time.sleep(3)
+    driver.find_element(By.XPATH, upcoming).click()
+    time.sleep(3)
+    #driver.find_element(By.XPATH, mine).click()
+    #time.sleep(3)
+    #driver.find_element(By.XPATH, all).click()
+    #time.sleep(3)
+
+    driver.find_element(By.XPATH, share_btn).click()
+    driver.find_element(By.XPATH, post_it).click()
+
+    if(driver.find_element(By.XPATH, login_popup).is_displayed()):
+        print("Log in pop up validated")
+    else:
+        print("Log in pop up validation failed")
+        raise Exception
+
 
 def validate_post_of_following():
     if("cbetkvak" in driver.find_element(By.XPATH, "//p[@class='sc-gswNZR kHzHci']/div/a").text):
