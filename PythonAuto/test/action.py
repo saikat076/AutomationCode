@@ -7,7 +7,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 import time
-import json
 
 driver_path = ChromeDriverManager().install()
 #saikat_chrome_driver_path = 'PythonAuto/test/chromedriver_mac/chromedriver'
@@ -34,7 +33,7 @@ fourth_digit = "//*[@id='fourth']"
 sign_up_button = "//button[text()='SIGN UP']"
 login_email = "//*[@id='fname']"
 password_radio_button = "//*[text()='Password']"
-continue_button = "//*[@id='root']/div[1]/div[2]/div/form/button"
+continue_button = "//*[@id='root']/div[1]/div/div[2]/div/form/button"
 enter_password_header = "//p[text()='Enter Password']"
 login_password = "//*[@placeholder='Your password here']"
 login_button = "//*[text()='Login']"
@@ -139,6 +138,15 @@ popular_RT_text = "//div[@class='card_text']"
 townhall = "(//*[text()='TownHall'])[1]"
 timeline_ = "//*[text()='Timeline']"
 interaction = "//div[@id='townhall_post_container']/div/span[2]"
+first_video = "(//div[@class='snippetVideo-wrapper']/video)[1]"
+post_video = "//div[@class='d-flex']/label"
+past_rt = "//div[@class='video_img']/img"
+rt_playing = "//video[@class='video_player']"
+live_cover_img = "//img[@class='rt_cover_img']"
+invite_msg = "//p[@class='MuiTypography-root MuiTypography-body1 css-1amsfhl']"
+yes_btn = "//button[text()='YES']"
+card = "//p[@class='rt_tags']"
+rt_details = "//*[text()='RoundTable Details']"
 
 ## populating action methods here ##
 
@@ -364,12 +372,11 @@ def validate_snip_it():
     else:
         print('Snip its are not available')
         raise Exception
-
-    #hover = ActionChains(driver).move_to_element(driver.find_element(By.XPATH, mute_button))
-    #hover.perform()
-
-    #driver.find_element(By.XPATH, mute_button).click()
-    #print('Mute button clicked')
+    
+    if(driver.find_element(By.XPATH, first_video).is_displayed()):
+        print('Only first snip-it is displayed on page')
+    else:
+        print('Snip-it display validation failed')
 
     time.sleep(5)
 
@@ -382,6 +389,11 @@ def validate_snip_it():
 def click_on_add_and_validate():
     driver.find_element(By.XPATH, snip_it_add).click()
     time.sleep(2)
+    
+    post_video_element = driver.find_element(By.XPATH, post_video)
+    file_path = 'vid.mp4'
+    post_video_element.send_keys(file_path)
+
     driver.find_element(By.XPATH, snip_it_post_comment).send_keys('Test Post')
     if(driver.find_element(By.XPATH, snip_it_video).is_displayed()):
         print('Post validated!')
@@ -398,8 +410,13 @@ def click_on_all():
 def validate_RT():
     driver.find_element(By.XPATH, video1).click()
     time.sleep(3)
+
+    driver.back()
+    time.sleep(3)
     
-    if(driver.find_element(By.XPATH, recorded).is_displayed()):
+    if(driver.find_element(By.XPATH, past_rt).is_displayed()):
+
+        time.sleep(10)
         print('RT validation passed')
     else:
         print('RT validation failed')
@@ -423,6 +440,19 @@ def validate_live():
     else:
         print('Live page redirection validation failed')
         raise Exception
+    
+    driver.find_element(By.XPATH, live_cover_img).click()
+    try:
+        if(driver.find_element(By.XPATH, invite_msg).is_displayed()):
+            print('User is uninvited, sending invitation')
+            driver.find_element(By.XPATH, yes_btn).click()
+    except:
+        driver.find_element(By.XPATH, card).click()
+        if(driver.find_element(By.XPATH, rt_details).is_displayed()):
+            print('RT details validation succesful')
+        else:
+            print('RT details validation failed')
+            raise Exception
 
 def click_on_upcoming():
     driver.find_element(By.XPATH, upcoming).click()
@@ -461,6 +491,19 @@ def validate_mine():
         print('Mine URL validated')
     else:
         print('Mine URL validation failed')
+        raise Exception
+
+    if(driver.find_element(By.XPATH, upcoming).is_displayed() and driver.find_element(By.XPATH, live).is_displayed() and driver.find_element(By.XPATH, all).is_displayed()):
+        print('All RT options are displayed')
+    else:
+        print('Options are not displayed')
+        raise Exception
+    
+    driver.find_element(By.XPATH, card).click()
+    if(driver.find_element(By.XPATH, rt_details).is_displayed()):
+            print('RT details validation succesful')
+    else:
+        print('RT details validation failed')
         raise Exception
 
 def click_on_new():
