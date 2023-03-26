@@ -112,7 +112,7 @@ reject_btn = "//button[text()='Reject']"
 notifications = "//*[text()='Notifications']"
 network = "//*[text()='Network']"
 first_noti = "//div[@class='user_suggestion_container']/div/div/div/div[2]/p"
-profile = "//*[text()='Profile']"
+profile = "//*[contains(text(), 'Profile')]"
 snip_it_option = "//div[@class='MuiTabs-scroller MuiTabs-fixed css-1anid1y']/div/button[3]"
 snip_it_img = "//div[@class='snipsDiv']/img"
 menu = "(//button[@id='basic-button'])[1]"
@@ -126,7 +126,7 @@ dob = "//*[@placeholder='dd/mm/yyyy']"
 gender = "//*[text()='Select...']"
 location  = "//*[@placeholder='Enter Your Location']"
 interest = "//*[@placeholder='Search and add']"
-save_changes = "(//*[text()='SAVE CHANGES'])[1]"
+save_changes = "(//*[text()='SAVE CHANGES'])[2]"
 save_changes_msg = "//*[text()='Your changes have been saved!']"
 search = "//*[@placeholder='Search']"
 search_options = "//div[@class='MuiTabs-flexContainer css-k008qs']/button"
@@ -150,6 +150,11 @@ rt_details = "//*[text()='RoundTable Details']"
 share_btn = "(//*[@id='share_button'])[1]"
 post_it = "//*[text()='Post it']"
 login_popup = "//p[@class='MuiTypography-root MuiTypography-body1 css-70xrfa']"
+search_rslt = "//div[@class='d-flex justify-content-start']"
+success_msg = "//small[@class='text-success']"
+bio = "//div[@class='bioCount']/textarea"
+snip_it_in_profile = "//div[@class='snipsDiv']/img"
+like_btn_snipit = "(//img[@alt='like'])[1]"
 
 ## populating action methods here ##
 
@@ -818,6 +823,13 @@ def go_to_profile_RT_and_validate():
     else:
         print('Snip it displayed under round table in profile - validation failed')
 
+    driver.find_element(By.XPATH, snip_it_in_profile).click()
+
+    time.sleep(5)
+    driver.find_element(By.XPATH, like_btn_snipit).click()
+    time.sleep(5)
+    driver.find_element(By.XPATH, like_btn_snipit).click()
+
 def save_post_in_timeline():
     time.sleep(2)
 
@@ -845,8 +857,11 @@ def go_to_profile_and_edit():
     driver.find_element(By.XPATH, edit_profile).click()
     time.sleep(10)
 
-    driver.find_element(By.XPATH, save_changes).click()
+    driver.find_element(By.XPATH, bio).send_keys("Test Bio")
 
+    button = driver.find_element(By.XPATH, save_changes)
+    button.send_keys(Keys.PAGE_DOWN)
+    driver.execute_script("arguments[0].click();", button)
     time.sleep(3)
 
     if(driver.find_element(By.XPATH, bio).is_displayed() and driver.find_element(By.XPATH, full_name).is_displayed() and driver.find_element(By.XPATH, dob).is_displayed() and driver.find_element(By.XPATH, gender).is_displayed() and driver.find_element(By.XPATH, location).is_displayed() and driver.find_element(By.XPATH, interest).is_displayed() and driver.find_element(By.XPATH, save_changes_msg).is_displayed()):
@@ -855,7 +870,17 @@ def go_to_profile_and_edit():
         print('Edit profile validation failed')
         raise Exception
 
-    #driver.find_element(By.XPATH, save_changes).click()
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(20)
+
+    driver.find_element(By.XPATH, save_changes).click()
+    time.sleep(5)
+    
+    if (not driver.find_element(By.XPATH, success_msg).is_displayed()):
+        print("Success message validation failed after user action");
+        raise Exception
+    else:
+        print("Success message validated after user action")
 
 def go_to_search_and_validate():
     driver.find_element(By.XPATH, search).send_keys('Test')
@@ -867,6 +892,11 @@ def go_to_search_and_validate():
         if(not i.is_displayed()):
             raise Exception
     
+    search_results = driver.find_elements(By.XPATH, search_rslt)
+    for i in search_results:
+        if(not i.is_displayed()):
+            raise Exception;
+
     print('Search validation succesful')
 
 def go_to_profile_and_validate():
@@ -885,6 +915,7 @@ def go_to_profile_and_validate():
 
     driver.find_element(By.XPATH, "(//*[text()='Followers'])[2]").click()
     time.sleep(2)
+
 
 def validate_popular_shows():
     time.sleep(3)
