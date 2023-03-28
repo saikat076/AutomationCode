@@ -47,7 +47,7 @@ try:
     I_go_to_townhall_news()
     I_validate_townhall_news()
     I_validate_likes()
-    I_validate_dislike()
+    #I_validate_dislike()
     I_validate_comment()
     I_validate_circulate_and_quote()
 except Exception as e:

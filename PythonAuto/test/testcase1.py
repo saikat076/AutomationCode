@@ -21,7 +21,8 @@ def I_close_the_browser():
 try:
     I_open_the_browser("https://stage.web.khulke.com/roundtable/all")
     I_complete_registraion('bbijoy854@gmail.com')
-except:
+except Exception as e:
     print('Sign up failed')
+    print(e)
 
 I_close_the_browser()

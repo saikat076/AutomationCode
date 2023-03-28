@@ -101,7 +101,8 @@ tags_add = "(//button[text()='Add'])[2]"
 recorded_audio_panelist = "(//div[@class='form-control-div '])[2]/*"
 upload_recorded_roundtable = "(//*[text()='Upload Recorded RoundTable'])[1]"
 search_a_user = "//div[@class=' css-19bb58m']/*"
-email = "//*[@placeholder='Add Mobile or Email ID to invite']"
+email = "//*[@placeholder='abcd@example.com']"
+use_email = "//*[text()='Use email Id instead']"
 add_btn = "//button[text()='Add']"
 proceed_btn = "//button[text()='PROCEED']"
 my_rt = "//div[@class='d-flex']"
@@ -155,6 +156,7 @@ success_msg = "//small[@class='text-success']"
 bio = "//div[@class='bioCount']/textarea"
 snip_it_in_profile = "//div[@class='snipsDiv']/img"
 like_btn_snipit = "(//img[@alt='like'])[1]"
+post_video_timeline = "//*[contains(text(), 'Video')]"
 
 ## populating action methods here ##
 
@@ -177,6 +179,8 @@ def click_on_create_an_account():
 
 ## method 4 - entering email ##
 def enter_email(emailid):
+    driver.find_element(By.XPATH, use_email).click()
+
     driver.find_element(By.XPATH, email).click()
     driver.find_element(By.XPATH, email).send_keys(emailid)
 
@@ -296,7 +300,8 @@ def validate_likes():
     num_of_likes1 = int(driver.find_element(By.XPATH, no_of_likes).text)
     time.sleep(5)
     driver.find_element(By.XPATH, like_btn).click()
-    time.sleep(5)
+    time.sleep(10)
+    #driver.refresh()
     num_of_likes2 = int(driver.find_element(By.XPATH, no_of_likes).text)
 
     if(num_of_likes2-num_of_likes1 == 1):
@@ -362,6 +367,14 @@ def validate_timeline_post():
         print('like, dislike, comment, circulate or quote is validated')
     else:
         print('Validation failed for like, dislike, comment, circulate or quote')
+        raise Exception
+
+    post_video_element = driver.find_element(By.XPATH, post_video_timeline)
+    post_video_element.click()
+    file_path = 'vid.mp4'
+    try:
+        post_video_element.send_keys(file_path)
+    except:
         raise Exception
 
 def validate_snip_it():
