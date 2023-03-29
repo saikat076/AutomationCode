@@ -25,8 +25,8 @@ def I_click_on_new_RT():
     click_on_new()
 
 @Then('I click and validate RT video')
-def I_click_and_validate_RT_video():
-    click_and_validate_RT_videos()
+def I_click_and_validate_RT_video(panelist, moderator):
+    click_and_validate_RT_videos(panelist, moderator)
 
 try:
     I_open_the_browser("https://stage.web.khulke.com/roundtable/all")
@@ -34,7 +34,7 @@ try:
     I_validate_login_functionality()
     I_click_on_round_table()
     I_click_on_new_RT()
-    I_click_and_validate_RT_video()
+    I_click_and_validate_RT_video("testkhulke103", "test1234")
     
 except Exception as e:
     print(e)

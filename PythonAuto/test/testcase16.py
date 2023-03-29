@@ -36,11 +36,21 @@ def I_edit_upcoming_RT():
 def I_validate_my_RT_edit_pages():
     click_and_validate_RT_videos()
 
+@When('I click on new RT')
+def I_click_on_new_RT():
+    click_on_new()
+
+@Then('I click and validate RT video')
+def I_click_and_validate_RT_video(panelist, moderator):
+    click_and_validate_RT_videos(panelist, moderator)
+
 try:
     I_open_the_browser("https://stage.web.khulke.com/roundtable/all")
     I_log_in_with_email('saikatbhattacharyya631@gmail.com', 'Saikat123@')
     I_validate_login_functionality()
     I_click_on_round_table()
+    I_click_on_new_RT()
+    I_click_and_validate_RT_video("testkhulke103", "test1234")
     I_click_on_mine()
     I_validate_mine()
     I_edit_upcoming_RT()

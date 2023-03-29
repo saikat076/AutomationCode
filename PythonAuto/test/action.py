@@ -83,8 +83,8 @@ add_video_title = "//*[@placeholder='Add Title']"
 add_video_description = "//textarea[@placeholder='Add Description']"
 RT_continue = "//div/button[text()='CONTINUE']"
 RT_moderator = "(//div[@class=' css-hlgwow'])[1]/div[2]/*"
-RT_moderator_option = "(//img[@class='avatar'])[8]"
-panelist_option = "(//img[@class='avatar'])[8]"
+RT_moderator_option = "(//*[@class=' css-b62m3t-container'])[1]/div[2]"
+panelist_option = "(//*[@class=' css-b62m3t-container'])[2]/div[2]"
 moderator_intro = "(//*[@placeholder='Introduction'])[1]"
 panelist_intro = "(//*[@placeholder='Introduction'])[2]"
 panelist = "(//div[@class=' css-hlgwow'])[2]/div[2]/*"
@@ -530,7 +530,7 @@ def validate_mine():
 def click_on_new():
     driver.find_element(By.XPATH, new_RT).click()
 
-def click_and_validate_RT_videos():
+def click_and_validate_RT_videos(panelist_list, moderator_list):
 
     time.sleep(5)
 
@@ -554,7 +554,7 @@ def click_and_validate_RT_videos():
     time.sleep(5)
 
     driver.find_element(By.XPATH, RT_moderator).click()
-    driver.find_element(By.XPATH, RT_moderator).send_keys('test1234')
+    driver.find_element(By.XPATH, RT_moderator).send_keys(moderator_list)
     time.sleep(5)
     driver.find_element(By.XPATH, RT_moderator_option).click()
     
@@ -564,7 +564,7 @@ def click_and_validate_RT_videos():
     time.sleep(5)
 
     driver.find_element(By.XPATH, panelist).click()
-    driver.find_element(By.XPATH, panelist).send_keys('testkhulke103')
+    driver.find_element(By.XPATH, panelist).send_keys(panelist_list)
     time.sleep(5)
     driver.find_element(By.XPATH, panelist_option).click()
 
@@ -608,19 +608,21 @@ def click_and_validate_RT_videos():
     driver.find_element(By.XPATH, search_a_user).click()
     driver.find_element(By.XPATH, search_a_user).send_keys('iostester147')
 
-    driver.find_element(By.XPATH, RT_moderator_option).click()
-    driver.find_element(By.XPATH, email).send_keys('bbijoy854@gmail.com')
-    driver.find_element(By.XPATH, add_btn).click()
-
-    try:
-        driver.find_element(By.XPATH, RT_continue).click()
-    except:
-        driver.find_element(By.XPATH, RT_continue).click()
+    driver.find_element(By.XPATH, RT_continue).click()
 
     if(driver.find_element(By.XPATH, proceed_btn)):
         print('RT video validation successful')
     else:
         print('RT video validation failed')
+        raise Exception
+    
+    driver.get("https://stage.web.khulke.com/roundtable/mine")
+    time.sleep(10)
+
+    if(driver.find_element(By.XPATH, "//div/*[contains(@id, 'Group_')]").get_attribute("id") == "Group_19603"):
+        print("Type - Validated")
+    else:
+        print("Type validation failed")
         raise Exception
 
 def click_and_validate_RT_audio():
@@ -701,8 +703,8 @@ def click_and_validate_RT_audio():
     driver.find_element(By.XPATH, search_a_user).send_keys('iostester147')
 
     driver.find_element(By.XPATH, RT_moderator_option).click()
-    driver.find_element(By.XPATH, email).send_keys('bbijoy854@gmail.com')
-    driver.find_element(By.XPATH, add_btn).click()
+    #driver.find_element(By.XPATH, email).send_keys('bbijoy854@gmail.com')
+    #driver.find_element(By.XPATH, add_btn).click()
 
     try:
         driver.find_element(By.XPATH, RT_continue).click()
@@ -713,6 +715,15 @@ def click_and_validate_RT_audio():
         print('RT audio validation successful')
     else:
         print('RT audio validation failed')
+        raise Exception
+    
+    driver.get("https://stage.web.khulke.com/roundtable/mine")
+    time.sleep(10)
+
+    if(driver.find_element(By.XPATH, "//div/*[contains(@id, 'Group_')]").get_attribute("id") == "Group_19603"):
+        print("Type - Validated")
+    else:
+        print("Type validation failed")
         raise Exception
 
 def click_and_validate_recorded_audio():
@@ -751,6 +762,7 @@ def click_and_validate_recorded_audio():
         raise Exception
 
     time.sleep(5)
+    
 
 def click_and_validate_recorded_video():
     time.sleep(5)
@@ -789,6 +801,15 @@ def click_and_validate_recorded_video():
         raise Exception
 
     time.sleep(5)
+
+    driver.get("https://stage.web.khulke.com/roundtable/mine")
+    time.sleep(10)
+
+    if(driver.find_element(By.XPATH, "//div/*[contains(@id, 'Group_')]").get_attribute("id") == "Group_19603"):
+        print("Type - Validated")
+    else:
+        print("Type validation failed")
+        raise Exception
 
 def edit_upcoming_RT():
     driver.refresh()
